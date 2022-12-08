@@ -46,8 +46,8 @@
       ;; 0
       ;; (if (= (opt:sub 1 2) :no)
       ;;     `(tset vim.opt ,(opt:sub 3 -1) ,false)
-	    ;; (not= (opt:sub 1 2) :no)
-	    ;;     `(tset vim.opt ,opt ,true))
+      ;; (not= (opt:sub 1 2) :no)
+      ;;     `(tset vim.opt ,opt ,true))
       1
       (match (opt:sub -1)
         "+" `(: (. vim.opt ,(opt:sub 1 -2)) :append ,...)
@@ -74,9 +74,9 @@
   (assert-compile (string? lhs) "expected string for lhs" lhs)
   (assert-compile (or (string? rhs) (sym? rhs)) "expected string(or symtol) for rhs" rhs)
   (let [mode []] (fcollect [i 1 (length modes) :into mode]
-    (modes:sub i i))
-  (icollect [_ m (ipairs mode) :into `(do)]
-    `(vim.api.nvim_set_keymap ,m ,lhs ,rhs ,{:noremap true :silent true}))))
+                  (modes:sub i i))
+   (icollect [_ m (ipairs mode) :into `(do)]
+     `(vim.api.nvim_set_keymap ,m ,lhs ,rhs ,{:noremap true :silent true}))))
 
 ;;  :homo/114514.nvim
 ;;  (:nvim-neorg/neorg
@@ -107,9 +107,9 @@
 (fn use! [packer ...]
   `((. ,packer :startup)
     {1 (fn [use#]
-      (use# :wbthomason/packer.nvim)
-      (use# ,(icollect [_ pkg (ipairs [...])] (parse-pkg pkg))))
-     :config {:max_jobs 16
+        (use# :wbthomason/packer.nvim)
+        (use# ,(icollect [_ pkg (ipairs [...])] (parse-pkg pkg))))
+     :config {:max_jobs 32
               :display {:open_fn (. (require :packer.util) :float)}}}))
 
 (fn pack-init! [packer]
