@@ -57,9 +57,12 @@
 (pack-init! (require :packer))
 
 (use! (require :packer) 
-  :rebelot/kanagawa.nvim
   :rktjmp/hotpot.nvim
   :lewis6991/impatient.nvim
+  :williamboman/mason.nvim
+  :neovim/nvim-lspconfig
+  :rebelot/kanagawa.nvim
+  :gpanders/nvim-parinfer
   (:nvim-telescope/telescope.nvim :requires [:nvim-lua/popup.nvim :nvim-lua/plenary.nvim])
   (:nvim-treesitter/nvim-treesitter :run ":TSUpdate"))
 
@@ -94,31 +97,34 @@
 
 (local telescope-keymap
   {:i {:<C-j> :move_selection_next
-  :<C-k> :move_selection_previous
-  :<C-n> :move_selection_next
-  :<C-p> :move_selection_previous
-  :<Down> :cycle_history_next
-  :<Up> :cycle_history_prev
-  :<C-c> :close
-  :<C-u> :preview_scrolling_up
-  :<C-d> :preview_scrolling_down}})	
+       :<C-k> :move_selection_previous
+       :<C-n> :move_selection_next
+       :<C-p> :move_selection_previous
+       :<Down> :cycle_history_next
+       :<Up> :cycle_history_prev
+       :<C-c> :close
+       :<C-u> :preview_scrolling_up
+       :<C-d> :preview_scrolling_down}})  
 
+(let [mason-config (require :mason)]
+  (mason-config.setup {}))
+
+(let [lsp-config (require :lspconfig)]
+  nil)
 
 (let [telescope-config (require :telescope)]
   (telescope-config.setup
     {
-    :defaults {:initial_mode :insert
-               :layout_strategy :horizontal
-               :mappings telescope-keymap}
-    :pickers {}
-    :extensions {}
-    }))
+     :defaults {:initial_mode :insert
+                :layout_strategy :horizontal
+                :mappings telescope-keymap}
+     :pickers {}
+     :extensions {}}))
 
 (let [treesitter-config (require :nvim-treesitter.configs)]
   (treesitter-config.setup 
     {
-    :ensure_installed [:fennel :lua :vim :help :javascript :elixir
-                       :bash :make :c :cpp :python :regex :comment]
-    :highlight {:enable true}
+     :ensure_installed [:fennel :lua :vim :help :javascript :elixir
+                        :bash :make :c :cpp :python :regex :comment]
+     :highlight {:enable true}}))
     ; :indent {:enable true}
-    }))
