@@ -1,4 +1,4 @@
-(import-macros {: set! : map! : buf-map! : pack-init! : use! : cmd!} :macros)
+(import-macros {: set! : map! : pack-init! : use! : cmd!} :macros)
 
 (set! encoding :UTF-8)
 (set! fileencoding :utf-8)
@@ -90,31 +90,28 @@
   (:nvim-telescope/telescope.nvim :requires [:nvim-lua/popup.nvim :nvim-lua/plenary.nvim])
   (:nvim-treesitter/nvim-treesitter :run ":TSUpdate"))
 
-;; (map (mode n) :H :5h)
+(map! (mode niv) :<Up> :<Nop>)
+(map! (mode niv) :<Down> :<Nop>)
+(map! (mode niv) :<Left> :<Nop>)
+(map! (mode niv) :<Right> :<Nop>)
 
+(map! (mode n) :H :0)
+(map! (mode n) :J :5j)
+(map! (mode n) :K :5k)
+(map! (mode n) :L :$)
 
-(map! :niv :<Up> :<Nop>)
-(map! :niv :<Down> :<Nop>)
-(map! :niv :<Left> :<Nop>)
-(map! :niv :<Right> :<Nop>)
+(map! (mode n) :U :<C-R>)
 
-(map! :n :H :0)
-(map! :n :J :5j)
-(map! :n :K :5k)
-(map! :n :L :$)
-
-(map! :n :U :<C-R>)
-
-(map! :n :<C-H> :<C-W>h)
-(map! :n :<C-J> :<C-W>j)
-(map! :n :<C-K> :<C-W>k)
-(map! :n :<C-L> :<C-W>l)
+(map! (mode n) :<C-H> :<C-W>h)
+(map! (mode n) :<C-J> :<C-W>j)
+(map! (mode n) :<C-K> :<C-W>k)
+(map! (mode n) :<C-L> :<C-W>l)
 
 ;; map("n", "<C-p>", ":Telescope find_files<CR>", opt)
 ;; map("n", "<C-f>", ":Telescope live_grep<CR>", opt)
 
-(map! :n :<C-P> ":Telescope find_files<CR>")
-(map! :n :<C-F> ":Telescope live_grep<CR>")
+(map! (mode n) :<C-P> ":Telescope find_files<CR>")
+(map! (mode n) :<C-F> ":Telescope live_grep<CR>")
 
 (vim.cmd.colorscheme :kanagawa)
 ;; (vim.cmd.colorscheme :poimandres)
@@ -132,27 +129,27 @@
        :<C-u> :preview_scrolling_up
        :<C-d> :preview_scrolling_down}})  
 
-;; (buf-map! (buf*bufnr) :n :K vim.lsp.buf.hover)
+;; (buffer-map! (buffer*bufnr) :n :K vim.lsp.buf.hover)
 
 (let [mason-config (require :mason)
       lsp-config (require :lspconfig)
       lsp-signature (require :lsp_signature)
       flags {:debounce_text_changes 150}]
   (fn on_attach [client bufnr]
-    (lsp-signature.on_attach)
-    (buf-map! (buf bufnr) :n :K vim.lsp.buf.hover)
-    (buf-map! (buf bufnr) :n :<C-k> vim.lsp.buf.signature_help)
-    (buf-map! (buf bufnr) :n :gD vim.lsp.buf.declaration)
-    (buf-map! (buf bufnr) :n :gd vim.lsp.buf.definition)
-    (buf-map! (buf bufnr) :n :<leader>D vim.lsp.buf.type_definition)
-    (buf-map! (buf bufnr) :n :<leader>I vim.lsp.buf.implementation)
-    (buf-map! (buf bufnr) :n :<leader>R vim.lsp.buf.references)
-    (buf-map! (buf bufnr) :n :<leader>r vim.lsp.buf.rename)
-    (buf-map! (buf bufnr) :n :<leader>a vim.lsp.buf.code_action)
-    (buf-map! (buf bufnr) :n :<leader>a vim.lsp.buf.range_code_action)
-    (buf-map! (buf bufnr) :n :<leader>wa vim.lsp.buf.add_workspace_folder)
-    (buf-map! (buf bufnr) :n :<leader>wr vim.lsp.buf.remove_workspace_folder)
-    (buf-map! (buf bufnr) :n :<leader>wl #(print (vim.inspect (vim.lsp.buf.list_workspace_folders)))))
+    (lsp-signature.on_attach 
+      {:floating_window true
+       :bind true
+       :doc_lines 10
+       :max_height 12
+       :max_width 80
+       :floating_window_above_cur_line true})
+    (map! (mode n) (buffer bufnr) :gD vim.lsp.buf.declaration)
+    (map! (mode n) (buffer bufnr) :gd vim.lsp.buf.definition)
+    (map! (mode n) (buffer bufnr) :gh vim.lsp.buf.hover)
+    (map! (mode n) (buffer bufnr) :gi vim.lsp.buf.implementation)
+    (map! (mode n) (buffer bufnr) :gR vim.lsp.buf.references)
+    (map! (mode n) (buffer bufnr) :gr vim.lsp.buf.rename)
+    (map! (mode n) (buffer bufnr) :ga vim.lsp.buf.code_action))
 
   (mason-config.setup {:automatic_installation true})
   (lsp-config.clangd.setup {: on_attach : flags})
