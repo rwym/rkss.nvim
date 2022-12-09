@@ -1,4 +1,4 @@
-(import-macros {: set! : map! : pack-init! : use!} :macros)
+(import-macros {: set! : map! : pack-init! : use! : cmd!} :macros)
 
 (set! encoding :UTF-8)
 (set! fileencoding :utf-8)
@@ -45,6 +45,14 @@
 (set! showcmd)
 (set! clipboard :unnamedplus)
 (set! nrformats+ :alpha)
+(set! background :dark)
+
+(cmd! "filetype plugin indent on")
+
+(if (= (vim.fn.executable "rg") 1)
+  (do
+    (set! grepformat "%f:%l:%c:%m,%f:%l:%m")
+    (set! grepprg "rg --vimgrep --no-heading --smart-case")))
 
 ;;(let [packer (require :packer)]
 ;;  (packer.startup

@@ -124,6 +124,10 @@
      :auto_reload_compiled true
       :display {:non_interactive false}}))
 
+(fn cmd! [...]
+  (assert-compile (string? ...) "expected string for ..." ...)
+  `(vim.cmd ,...))
+
 ;; packer eg.
 ;; (:nvim-neorg/neorg
 ;; :run ":Neorg sync-parsers"
@@ -133,4 +137,5 @@
  : local-set!
  : map!
  : pack-init!
- : use!}
+ : use!
+ : cmd!}
