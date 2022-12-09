@@ -102,7 +102,7 @@
        `(vim.api.nvim_buf_set_keymap ,(second buffer) ,m ,lhs "" ,options))))
 
 (fn buf-map! [buffer modes lhs rhs]
-  (buf-map!* buffer modes lhs rhs {:noremap true :silent true :callback rhs}))
+  (buf-map!* buffer modes lhs rhs {:noremap true :silent true :callback (->str rhs)}))
 
 ;;(fn buf-map! [buffer modes lhs rhs]
 ;;  (map!* modes lhs rhs {:noremap true :silent true :buffer buffer}))
