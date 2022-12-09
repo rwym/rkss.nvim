@@ -76,6 +76,15 @@
   :lewis6991/impatient.nvim
   :williamboman/mason.nvim
   :neovim/nvim-lspconfig
+  :ray-x/lsp_signature.nvim
+  :hrsh7th/nvim-cmp
+  :hrsh7th/vim-vsnip
+  :hrsh7th/cmp-vsnip
+  :hrsh7th/cmp-nvim-lsp
+  :hrsh7th/cmp-buffer
+  :hrsh7th/cmp-path
+  :hrsh7th/cmp-cmdline
+  :rafamadriz/friendly-snippets
   :rebelot/kanagawa.nvim
   :gpanders/nvim-parinfer
   (:nvim-telescope/telescope.nvim :requires [:nvim-lua/popup.nvim :nvim-lua/plenary.nvim])
@@ -123,14 +132,14 @@
        :<C-u> :preview_scrolling_up
        :<C-d> :preview_scrolling_down}})  
 
-(let [mason-config (require :mason)]
-  (mason-config.setup {}))
-
 ;; (buf-map! (buf*bufnr) :n :K vim.lsp.buf.hover)
 
-(let [lsp-config (require :lspconfig)
+(let [mason-config (require :mason)
+      lsp-config (require :lspconfig)
+      lsp-signature (require :lsp_signature)
       flags {:debounce_text_changes 150}]
   (fn on_attach [client bufnr]
+    (lsp-signature.on_attach)
     (buf-map! (buf bufnr) :n :K vim.lsp.buf.hover)
     (buf-map! (buf bufnr) :n :<C-k> vim.lsp.buf.signature_help)
     (buf-map! (buf bufnr) :n :gD vim.lsp.buf.declaration)
@@ -145,22 +154,36 @@
     (buf-map! (buf bufnr) :n :<leader>wr vim.lsp.buf.remove_workspace_folder)
     (buf-map! (buf bufnr) :n :<leader>wl #(print (vim.inspect (vim.lsp.buf.list_workspace_folders)))))
 
-;;    (map! :n :K vim.lsp.buf.hover)
-;;    (map! :n :<C-k> vim.lsp.buf.signature_help)
-;;    (map! :n :gD vim.lsp.buf.declaration)
-;;    (map! :n :gd vim.lsp.buf.definition)
-;;    (map! :n :<leader>D vim.lsp.buf.type_definition)
-;;    (map! :n :<leader>I vim.lsp.buf.implementation)
-;;    (map! :n :<leader>R vim.lsp.buf.references)
-;;    (map! :n :<leader>r vim.lsp.buf.rename)
-;;    (map! :n :<leader>a vim.lsp.buf.code_action)
-;;    (map! :n :<leader>a vim.lsp.buf.range_code_action)
-;;    (map! :n :<leader>wa vim.lsp.buf.add_workspace_folder)
-;;    (map! :n :<leader>wr vim.lsp.buf.remove_workspace_folder)
-;;    (map! :n :<leader>wl #(print (vim.inspect (vim.lsp.buf.list_workspace_folders)))))
-
+  (mason-config.setup {:automatic_installation true})
   (lsp-config.clangd.setup {: on_attach : flags})
   (lsp-config.pyright.setup {: on_attach : flags}))
+
+(let [cmp (require :cmp)
+      sources [{:name :path}
+               {:name :nvim_lsp :keyword_length 2 :group_index 1}
+               {:name :buffer :keyword_length 2 :group_index 2
+                :option {:keyword_pattern "\\k\\+"}}]
+               
+      maps {:<C-f> (cmp.mapping.scroll_docs 4)
+            :<C-b> (cmp.mapping.scroll_docs -4)
+            :<CR> (cmp.mapping.confirm {:select true})
+            :<Tab> (cmp.mapping.select_next_item)
+            :<C-J> (cmp.mapping.select_next_item)
+            :<C-K> (cmp.mapping.select_prev_item)}]
+            
+
+  (cmp.setup {:snippet {:expand #(vim.fn.vsnip#anonymous $.body)}
+              : sources :mapping (-> maps
+                                     cmp.mapping.preset.insert)})
+
+  (cmp.setup.cmdline "/" {:mapping (cmp.mapping.preset.cmdline)}
+                        :sources [{:name :buffer}])
+
+  (cmp.setup.cmdline ":"
+                   {:mapping (cmp.mapping.preset.cmdline)
+                    :sources (cmp.config.sources [{:name :path}]
+                                                 [{:name :cmdline}])}))
+
 
 (let [telescope-config (require :telescope)]
   (telescope-config.setup
