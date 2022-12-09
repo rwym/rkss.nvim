@@ -35,7 +35,6 @@
 (set! splitbelow)
 (set! splitright)
 (set! completeopt "menu,menuone,noselect,noinsert")
-(set! termguicolors) 
 (set! list false)
 (set! listchars "space:·,tab:··")
 (set! wildmenu) 
@@ -44,6 +43,7 @@
 (set! showmode)
 (set! showcmd)
 (set! clipboard :unnamedplus)
+(set! virtualedit :block)
 (set! nrformats+ :alpha)
 (set! background :dark)
 
@@ -53,6 +53,11 @@
   (do
     (set! grepformat "%f:%l:%c:%m,%f:%l:%m")
     (set! grepprg "rg --vimgrep --no-heading --smart-case")))
+
+(set! title)         ; set the terminal title
+(when (or (= vim.env.COLORTERM :truecolor)
+          (= vim.env.COLORTERM :24bit))
+  (set! termguicolors))
 
 ;;(let [packer (require :packer)]
 ;;  (packer.startup
