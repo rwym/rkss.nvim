@@ -83,6 +83,7 @@
 
 ;; (map (mode n) :H :5h)
 
+
 (map! :niv :<Up> :<Nop>)
 (map! :niv :<Down> :<Nop>)
 (map! :niv :<Left> :<Nop>)
@@ -125,8 +126,40 @@
 (let [mason-config (require :mason)]
   (mason-config.setup {}))
 
-(let [lsp-config (require :lspconfig)]
-  nil)
+;; (buf-map! (buf*bufnr) :n :K vim.lsp.buf.hover)
+
+(let [lsp-config (require :lspconfig)
+      flags {:debounce_text_changes 150}]
+  (fn on_attach [client bufnr]
+;;    (buf-map! (buf bufnr) :n :K vim.lsp.buf.hover)
+;;    (buf-map! (buf bufnr) :n :<C-k> vim.lsp.buf.signature_help)
+;;    (buf-map! (buf bufnr) :n :gD vim.lsp.buf.declaration)
+;;    (buf-map! (buf bufnr) :n :gd vim.lsp.buf.definition)
+;;    (buf-map! (buf bufnr) :n :<leader>D vim.lsp.buf.type_definition)
+;;    (buf-map! (buf bufnr) :n :<leader>I vim.lsp.buf.implementation)
+;;    (buf-map! (buf bufnr) :n :<leader>R vim.lsp.buf.references)
+;;    (buf-map! (buf bufnr) :n :<leader>r vim.lsp.buf.rename)
+;;    (buf-map! (buf bufnr) :n :<leader>a vim.lsp.buf.code_action)
+;;    (buf-map! (buf bufnr) :n :<leader>a vim.lsp.buf.range_code_action)
+;;    (buf-map! (buf bufnr) :n :<leader>wa vim.lsp.buf.add_workspace_folder)
+;;    (buf-map! (buf bufnr) :n :<leader>wr vim.lsp.buf.remove_workspace_folder)
+;;    (buf-map! (buf bufnr) :n :<leader>wl #(print (vim.inspect (vim.lsp.buf.list_workspace_folders))))
+
+    (map! :n :K vim.lsp.buf.hover)
+    (map! :n :<C-k> vim.lsp.buf.signature_help)
+    (map! :n :gD vim.lsp.buf.declaration)
+    (map! :n :gd vim.lsp.buf.definition)
+    (map! :n :<leader>D vim.lsp.buf.type_definition)
+    (map! :n :<leader>I vim.lsp.buf.implementation)
+    (map! :n :<leader>R vim.lsp.buf.references)
+    (map! :n :<leader>r vim.lsp.buf.rename)
+    (map! :n :<leader>a vim.lsp.buf.code_action)
+    (map! :n :<leader>a vim.lsp.buf.range_code_action)
+    (map! :n :<leader>wa vim.lsp.buf.add_workspace_folder)
+    (map! :n :<leader>wr vim.lsp.buf.remove_workspace_folder)
+    (map! :n :<leader>wl #(print (vim.inspect (vim.lsp.buf.list_workspace_folders)))))
+
+  (lsp-config.clangd.setup {: on_attach : flags}))
 
 (let [telescope-config (require :telescope)]
   (telescope-config.setup

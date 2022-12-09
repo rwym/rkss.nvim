@@ -86,8 +86,8 @@
     (icollect [_ m (ipairs mode) :into `(do)]
       `(vim.api.nvim_set_keymap ,m ,lhs ,rhs ,options))))
 
-(lambda map! [modes lhs rhs ?options]
-  (map!* modes lhs rhs {:noremap true :silent true}))
+(fn map! [modes lhs rhs]
+  (map!* modes lhs rhs {:noremap true :silent true :callback rhs}))
 
 (lambda buf-map!* [buffer modes lhs rhs ?options]
   (assert-compile (and (list? buffer) (= `buf (first buffer)) "expected list for buffer" buffer))
@@ -99,10 +99,13 @@
     (fcollect [i 1 (length modes) :into mode]
        (modes:sub i i))
     (icollect [_ m (ipairs mode) :into `(do)]
-       `(vim.api.nvim_buf_set_keymap ,(first buffer) ,m ,lhs ,rhs ,options))))
+       `(vim.api.nvim_buf_set_keymap ,(second buffer) ,m ,lhs "" ,options))))
 
-(lambda buf-map! [buffer modes lhs rhs ?options]
-  (buf-map! buffer modes lhs rhs ?options))
+(fn buf-map! [buffer modes lhs rhs]
+  (buf-map!* buffer modes lhs rhs {:noremap true :silent true :callback rhs}))
+
+;;(fn buf-map! [buffer modes lhs rhs]
+;;  (map!* modes lhs rhs {:noremap true :silent true :buffer buffer}))
 
 ;; (lambda map [...]
 ;;   (let [n (length [...])
