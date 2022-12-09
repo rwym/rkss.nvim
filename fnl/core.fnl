@@ -59,6 +59,8 @@
           (= vim.env.COLORTERM :24bit))
   (set! termguicolors))
 
+(set vim.g.mapleader " ")
+
 ;;(let [packer (require :packer)]
 ;;  (packer.startup
 ;;    (fn [use]
