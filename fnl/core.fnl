@@ -159,7 +159,8 @@
 ;;    (map! :n :<leader>wr vim.lsp.buf.remove_workspace_folder)
 ;;    (map! :n :<leader>wl #(print (vim.inspect (vim.lsp.buf.list_workspace_folders)))))
 
-  (lsp-config.clangd.setup {: on_attach : flags}))
+  (lsp-config.clangd.setup {: on_attach : flags})
+  (lsp-config.pyright.setup {: on_attach : flags}))
 
 (let [telescope-config (require :telescope)]
   (telescope-config.setup
