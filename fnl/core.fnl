@@ -1,4 +1,4 @@
-(import-macros {: set! : map! : pack-init! : use! : cmd!} :macros)
+(import-macros {: set! : map! : buf-map! : pack-init! : use! : cmd!} :macros)
 
 (set! encoding :UTF-8)
 (set! fileencoding :utf-8)
@@ -81,6 +81,7 @@
   (:nvim-telescope/telescope.nvim :requires [:nvim-lua/popup.nvim :nvim-lua/plenary.nvim])
   (:nvim-treesitter/nvim-treesitter :run ":TSUpdate"))
 
+;; (map (mode n) :H :5h)
 
 (map! :niv :<Up> :<Nop>)
 (map! :niv :<Down> :<Nop>)

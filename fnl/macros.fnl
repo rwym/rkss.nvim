@@ -28,12 +28,18 @@
   (assert-compile (tbl? xs) "expected table for xs" xs)
   (. xs 2))
 
+(fn third [xs]
+  (assert-compile (tbl? xs) "expected table for xs" xs)
+  (. xs 3))
+
 (fn last [xs]
   (assert-compile (tbl? xs) "expected table for xs" xs)
   (. xs (length xs)))
 
-(fn fn? [x] (and (list? x)
-             (or (= `fn (first x)) (= `hashfn (first x)) (= `lambda (first x)) (= `partial (first x)))))
+(fn fn? [x] 
+  (and (list? x) (or (= `fn (first x)) (= `hashfn (first x)) (= `lambda (first x)) (= `partial (first x)))))
+
+(fn exists? [path] `(= (nvim.fn.filereadable ,path) 1))
 
 (fn quoted? [x]
   (and (list? x) (= `quote (first x))))
@@ -82,6 +88,45 @@
 
 (lambda map! [modes lhs rhs ?options]
   (map!* modes lhs rhs {:noremap true :silent true}))
+
+(lambda buf-map!* [buffer modes lhs rhs ?options]
+  (assert-compile (and (list? buffer) (= `buf (first buffer)) "expected list for buffer" buffer))
+  (assert-compile (and (string? modes) (> (length modes) 0)) "expected string for modes (length modes must > 0)" modes)
+  (assert-compile (string? lhs) "expected string for lhs" lhs)
+  (assert-compile (or (string? rhs) (sym? rhs) (fn? rhs) (quoted? rhs)) "expected string, symtol, function and quoted expression for rhs" rhs)
+  (assert-compile (or (tbl? ?options) (nil? ?options)) "expected nil, table for ?options" ?options)
+  (let [mode [] options (if (nil? ?options) {} ?options)]
+    (fcollect [i 1 (length modes) :into mode]
+       (modes:sub i i))
+    (icollect [_ m (ipairs mode) :into `(do)]
+       `(vim.api.nvim_buf_set_keymap ,(first buffer) ,m ,lhs ,rhs ,options))))
+
+(lambda buf-map! [buffer modes lhs rhs ?options]
+  (buf-map! buffer modes lhs rhs ?options))
+
+;; (lambda map [...]
+;;   (let [n (length [...])
+;;         args [...]
+;;         mapping {:modes [] :opt {}}
+;;     (assert-compile (> n 2) "expected two args at least" n)
+;;     (if 
+;;       (and (list? (first args)) (= `mode (first args)))
+;;       (let [mode-str (. (first args) 2)]
+;;         (->str mode-str)
+;;         (fcollect [i 1 (length mode-str) :into mapping.modes]
+;;           (mode-str:sub i i)
+;;         (tset mapping :opt (if (tbl? (last args)) (last args) {}))
+;;         (icollect [_ m (ipairs mapping.args.modes) :into `(do)]
+;;           `(vim.api.nvim_set_keymap ,m ,(second args) ,(third args) ,mapping.opt)
+;;       (and (list? (first args)) (= `buf (first args)))
+;;       (let [mode-str (when (and (list? (first args)) (= `mode (first args))) (first args))]
+;;         (tset mapping :buf (first args))
+;;         (->str mode-str)
+;;         (fcollect [i 1 (length mode-str) :into mapping.modes]
+;;           (mode-str:sub i i)
+;;         (tset mapping :opt (if (tbl? (last args)) (last args) {}))
+;;         (icollect [_ m (ipairs mapping.args.modes) :into `(do)]
+;;           `(vim.api.nvim_buf_set_keymap ,mapping.buf ,m ,(third args) ,(. args 4) ,mapping.opt)))
 
 ;;  :homo/114514.nvim
 ;;  (:nvim-neorg/neorg
@@ -136,6 +181,7 @@
 {: set! 
  : local-set!
  : map!
+ : buf-map!
  : pack-init!
  : use!
  : cmd!}
