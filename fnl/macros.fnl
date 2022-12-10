@@ -43,7 +43,7 @@
 
 (fn quoted? [x]
   (and (list? x) (= `quote (first x))))
-                
+
 (fn set! [name ...]
   (assert-compile (sym? name) "expected name for synbol" name)
   (let [opt (->str name) n (select :# ...)]
@@ -94,7 +94,7 @@
             (fcollect [i 1 (length modes) &into keymap-args.modes]
                       (modes:sub i i)))
           (tset keymap-args.opts (->str a) true)))
-    (when (= (length keymap-args.modes) 0)
+    (when (empty? keymap-args.modes)
       (table.insert keymap-args.modes ""))
     (icollect [_ m (ipairs keymap-args.modes) &into `(do)]
       (if (nil? keymap-args.buf)

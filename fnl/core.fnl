@@ -85,7 +85,9 @@
   :hrsh7th/cmp-path
   :hrsh7th/cmp-cmdline
   :rafamadriz/friendly-snippets
+  :rose-pine/neovim
   :rebelot/kanagawa.nvim
+  :Shadorain/shadotheme
   :gpanders/nvim-parinfer
   (:nvim-telescope/telescope.nvim :requires [:nvim-lua/popup.nvim :nvim-lua/plenary.nvim])
   (:nvim-treesitter/nvim-treesitter :run ":TSUpdate"))
@@ -113,7 +115,9 @@
 (map! (mode n) :<C-P> ":Telescope find_files<CR>")
 (map! (mode n) :<C-F> ":Telescope live_grep<CR>")
 
-(vim.cmd.colorscheme :kanagawa)
+;; (vim.cmd.colorscheme :rose-pine)
+(vim.cmd.colorscheme :shado)
+;; (vim.cmd.colorscheme :kanagawa)
 ;; (vim.cmd.colorscheme :poimandres)
 ;; (vim.cmd.colorscheme :tokyonight-night)
 ;; (vim.cmd.colorscheme :oxocarbon)
@@ -194,7 +198,7 @@
 (let [treesitter-config (require :nvim-treesitter.configs)]
   (treesitter-config.setup 
     {
-     :ensure_installed [:fennel :lua :vim :help :javascript :elixir
-                        :bash :make :c :cpp :python :regex :comment]
+     :ensure_installed [:fennel :lua :vim :help :javascript :elixir :cmake :markdown
+                        :bash :make :c :cpp :python :regex :rust :comment]
      :highlight {:enable true}}))
     ; :indent {:enable true}
