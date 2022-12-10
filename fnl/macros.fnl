@@ -86,14 +86,14 @@
         (do (set keymap-args.rhs "")
             (set keymap-args.opts.callback (. args n))))
     (each [i a (ipairs args) &until (>= i (- n 1))]
-      (if (and (list? a) (= (. a 1) `buffer))
+      (if (and (list? a) (= (first a) `buffer))
           (do (assert-compile (nil? keymap-args.buf) "buffer given more than once")
-              (set keymap-args.buf (. a 2)))
-          (and (list? a) (= (. a 1) `mode))
-          (let [modes (tostring (. a 2))]
+              (set keymap-args.buf (second a)))
+          (and (list? a) (= (first a) `mode))
+          (let [modes (->str (second a))]
             (fcollect [i 1 (length modes) &into keymap-args.modes]
                       (modes:sub i i)))
-          (tset keymap-args.opts (tostring a) true)))
+          (tset keymap-args.opts (->str a) true)))
     (when (= (length keymap-args.modes) 0)
       (table.insert keymap-args.modes ""))
     (icollect [_ m (ipairs keymap-args.modes) &into `(do)]
@@ -150,7 +150,7 @@
       (do
         (assert-compile (odd? (length pkg-spec))
                         "a package specification is incomplete" pkg-spec)
-        (let [pkg-name (. pkg-spec 1)
+        (let [pkg-name (first pkg-spec)
               pkg-options
               (collect [_ key value (group-by 2 pkg-spec 2)] (values key value))]
           (tset pkg-options 1 pkg-name)
