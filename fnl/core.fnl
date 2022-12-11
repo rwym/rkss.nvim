@@ -97,10 +97,10 @@
 (map! (mode niv) :<Left> :<Nop>)
 (map! (mode niv) :<Right> :<Nop>)
 
-# (map! (mode n) :H :5h)
-# (map! (mode n) :J :5j)
-# (map! (mode n) :K :5k)
-# (map! (mode n) :L :5l)
+; (map! (mode n) :H :5h))
+; (map! (mode n) :J :5j))
+; (map! (mode n) :K :5k)
+; (map! (mode n) :L :5l)
 
 (map! (mode n) :U :<C-R>)
 
