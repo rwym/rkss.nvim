@@ -116,8 +116,8 @@
 (map! (mode n) :<C-F> ":Telescope live_grep<CR>")
 
 ;; (vim.cmd.colorscheme :rose-pine)
-(vim.cmd.colorscheme :shado)
-;; (vim.cmd.colorscheme :kanagawa)
+;; (vim.cmd.colorscheme :shado)
+(vim.cmd.colorscheme :kanagawa)
 ;; (vim.cmd.colorscheme :poimandres)
 ;; (vim.cmd.colorscheme :tokyonight-night)
 ;; (vim.cmd.colorscheme :oxocarbon)
@@ -157,7 +157,8 @@
 
   (mason-config.setup {:automatic_installation true})
   (lsp-config.clangd.setup {: on_attach : flags})
-  (lsp-config.pyright.setup {: on_attach : flags}))
+  (lsp-config.pyright.setup {: on_attach : flags})
+  (lsp-config.rust_analyzer.setup {: on_attach : flags}))
 
 (let [cmp (require :cmp)
       sources [{:name :path}
