@@ -85,18 +85,18 @@
         (set keymap-args.rhs (. args n))
         (do (set keymap-args.rhs "")
             (set keymap-args.opts.callback (. args n))))
-    (each [i a (ipairs args) &until (>= i (- n 1))]
+    (each [i a (ipairs args) :until (>= i (- n 1))]
       (if (and (list? a) (= (first a) `buffer))
           (do (assert-compile (nil? keymap-args.buf) "buffer given more than once")
               (set keymap-args.buf (second a)))
           (and (list? a) (= (first a) `mode))
           (let [modes (->str (second a))]
-            (fcollect [i 1 (length modes) &into keymap-args.modes]
+            (fcollect [i 1 (length modes) :into keymap-args.modes]
                       (modes:sub i i)))
           (tset keymap-args.opts (->str a) true)))
     (when (empty? keymap-args.modes)
       (table.insert keymap-args.modes ""))
-    (icollect [_ m (ipairs keymap-args.modes) &into `(do)]
+    (icollect [_ m (ipairs keymap-args.modes) :into `(do)]
       (if (nil? keymap-args.buf)
         `(vim.api.nvim_set_keymap ,m ,keymap-args.lhs ,keymap-args.rhs ,keymap-args.opts)
         `(vim.api.nvim_buf_set_keymap ,keymap-args.buf ,m ,keymap-args.lhs ,keymap-args.rhs ,keymap-args.opts)))))
@@ -135,6 +135,13 @@
 ;;   :run ":Neorg sync-parsers"
 ;;   :requires [:nvim-lua/plenary.nvim :nvim-treesitter/nvim-treesitter])
 
+(fn pack-init! [packer]
+  `((. ,packer :init)
+    {:git {:clone_timeout 300}
+     :compile_path (.. (vim.fn.stdpath :config) :/lua/packer_compiled.lua)
+     :auto_reload_compiled true
+      :display {:non_interactive false}}))
+
 (fn group-by [n seq ?from]
   (fn f [seq i]
     (let [i (+ i n)
@@ -159,17 +166,9 @@
 (fn use! [packer ...]
   `((. ,packer :startup)
     {1 (fn [use#]
-        (use# :wbthomason/packer.nvim)
         (use# ,(icollect [_ pkg (ipairs [...])] (parse-pkg pkg))))
      :config {:max_jobs 32
               :display {:open_fn (. (require :packer.util) :float)}}}))
-
-(fn pack-init! [packer]
-  `((. ,packer :init)
-    {:git {:clone_timeout 300}
-     :compile_path (.. (vim.fn.stdpath :config) :/lua/packer_compiled.lua)
-     :auto_reload_compiled true
-      :display {:non_interactive false}}))
 
 (fn cmd! [...]
   (assert-compile (string? ...) "expected string for ..." ...)

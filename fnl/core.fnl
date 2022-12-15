@@ -1,4 +1,4 @@
-(import-macros {: set! : local-set! : map! : pack-init! : use! : cmd!} :macros)
+(import-macros {: set! : local-set! : map! : pack-init! : use! : cmd! } :macros)
 
 (set! encoding :UTF-8)
 (set! fileencoding :utf-8)
@@ -70,6 +70,7 @@
 (pack-init! (require :packer))
 
 (use! (require :packer) 
+  :wbthomason/packer.nvim
   :rktjmp/hotpot.nvim
   :lewis6991/impatient.nvim
   :williamboman/mason.nvim
