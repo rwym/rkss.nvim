@@ -1,5 +1,5 @@
 # Rkss.nvim
-Rwyphn's Neovim configuration using hotpot and fennel.
+Neovim configuration using hotpot and fennel.
 ## About
 I gave up viml with complex syntax, not to mention the introduction of vim9, it is better to go directly to neovim. 
 
