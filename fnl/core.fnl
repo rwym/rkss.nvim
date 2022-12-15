@@ -1,4 +1,4 @@
-(import-macros {: set! : map! : pack-init! : use! : cmd!} :macros)
+(import-macros {: set! : local-set! : map! : pack-init! : use! : cmd!} :macros)
 
 (set! encoding :UTF-8)
 (set! fileencoding :utf-8)
@@ -9,10 +9,8 @@
 (set! cursorline false)
 (set! signcolumn :no)
 (set! tabstop 2)
-(set! tabstop 2)
 (set! softtabstop 2)
 (set! shiftround)
-(set! shiftwidth 2)
 (set! shiftwidth 2)
 (set! expandtab)
 (set! autoindent)
@@ -91,6 +89,8 @@
   :gpanders/nvim-parinfer
   (:nvim-telescope/telescope.nvim :requires [:nvim-lua/popup.nvim :nvim-lua/plenary.nvim])
   (:nvim-treesitter/nvim-treesitter :run ":TSUpdate"))
+
+(map! (mode n) :qq ":q!<CR>")
 
 (map! (mode niv) :<Up> :<Nop>)
 (map! (mode niv) :<Down> :<Nop>)
